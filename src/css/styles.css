@@ -75,9 +75,12 @@ html, body {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #0a0e27;
-  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1428 100%);
+  background: var(--bg-base);
+  background-image: var(--bg-primary);
   background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
   color: var(--text-primary);
   line-height: 1.6;
   position: relative;
@@ -231,6 +234,38 @@ body::before {
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.view-toggle .btn-icon {
+  background: transparent;
+  border: none;
+  transition: all 0.3s var(--transition-ios);
+}
+
+.view-toggle .btn-icon.active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.view-toggle .btn-icon:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Buttons */
@@ -418,9 +453,51 @@ button:active {
   gap: 1.25rem;
 }
 
+/* List View */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.list .card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+}
+
+.list .card .title {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.list .card .actions {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.list .card:hover {
+  transform: translateX(8px) scale(1.01);
+}
+
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+  
+  .list .card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .list .card .title {
+    margin-bottom: 1rem;
+  }
+  
+  .list .card .actions {
+    margin-top: 1rem;
   }
 }
 

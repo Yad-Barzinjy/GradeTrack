@@ -42,6 +42,39 @@ tabs.forEach(btn => {
   })
 })
 
+// View toggle for subjects (grid/list)
+const viewGridBtn = document.getElementById('view-grid')
+const viewListBtn = document.getElementById('view-list')
+const subjectsList = document.getElementById('subjects-list')
+
+if (viewGridBtn && viewListBtn && subjectsList) {
+  viewGridBtn.addEventListener('click', () => {
+    viewGridBtn.classList.add('active')
+    viewListBtn.classList.remove('active')
+    viewGridBtn.setAttribute('aria-pressed', 'true')
+    viewListBtn.setAttribute('aria-pressed', 'false')
+    subjectsList.classList.remove('list')
+    subjectsList.classList.add('grid')
+    localStorage.setItem('subjectsView', 'grid')
+  })
+  
+  viewListBtn.addEventListener('click', () => {
+    viewListBtn.classList.add('active')
+    viewGridBtn.classList.remove('active')
+    viewListBtn.setAttribute('aria-pressed', 'true')
+    viewGridBtn.setAttribute('aria-pressed', 'false')
+    subjectsList.classList.remove('grid')
+    subjectsList.classList.add('list')
+    localStorage.setItem('subjectsView', 'list')
+  })
+  
+  // Restore saved view preference
+  const savedView = localStorage.getItem('subjectsView')
+  if (savedView === 'list') {
+    viewListBtn.click()
+  }
+}
+
 // Add subject button
 const addBtn = document.getElementById('add-subject')
 if (addBtn) {
@@ -77,10 +110,10 @@ if (addBtn) {
   })
 }
 
-// Export buttons
-const exportSection = document.getElementById('view-export')
-if (exportSection) {
-  exportSection.addEventListener('click', async (e) => {
+// Export buttons (now in settings)
+const settingsSection = document.getElementById('view-einstellungen')
+if (settingsSection) {
+  settingsSection.addEventListener('click', async (e) => {
     const btn = e.target.closest('button[data-action]')
     if (!btn) return
     
@@ -118,4 +151,28 @@ if (exportSection) {
       showToast('Fehler: ' + err.message, 'error')
     }
   })
+}
+
+// Theme toggle
+const themeRadios = document.querySelectorAll('input[name="theme"]')
+if (themeRadios.length > 0) {
+  themeRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      const theme = e.target.value
+      if (theme === 'light') {
+        document.body.classList.add('light-mode')
+      } else {
+        document.body.classList.remove('light-mode')
+      }
+      localStorage.setItem('theme', theme)
+      showToast(`${theme === 'light' ? 'Light' : 'Dark'} Mode aktiviert`, 'success')
+    })
+  })
+  
+  // Restore saved theme
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode')
+    document.querySelector('input[name="theme"][value="light"]').checked = true
+  }
 }

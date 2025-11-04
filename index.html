@@ -40,7 +40,26 @@
       <section id="view-faecher" class="view" aria-labelledby="faecher-heading">
         <div class="toolbar">
           <h2 id="faecher-heading">Fächer</h2>
-          <button id="add-subject" class="primary">Fach hinzufügen</button>
+          <div class="toolbar-actions">
+            <div class="view-toggle" role="group" aria-label="Ansicht wechseln">
+              <button id="view-grid" class="btn-icon active" title="Kachelansicht" aria-pressed="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <rect x="2" y="2" width="7" height="7" rx="1"/>
+                  <rect x="11" y="2" width="7" height="7" rx="1"/>
+                  <rect x="2" y="11" width="7" height="7" rx="1"/>
+                  <rect x="11" y="11" width="7" height="7" rx="1"/>
+                </svg>
+              </button>
+              <button id="view-list" class="btn-icon" title="Listenansicht" aria-pressed="false">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <rect x="2" y="3" width="16" height="2" rx="1"/>
+                  <rect x="2" y="9" width="16" height="2" rx="1"/>
+                  <rect x="2" y="15" width="16" height="2" rx="1"/>
+                </svg>
+              </button>
+            </div>
+            <button id="add-subject" class="btn-primary">Fach hinzufügen</button>
+          </div>
         </div>
         <div id="subjects-list" class="grid"></div>
       </section>
