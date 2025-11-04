@@ -20,6 +20,14 @@
   --radius-lg: 24px;
   --transition-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
   --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Enhanced smooth scrolling */
+* {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 * {
@@ -111,35 +119,62 @@ body::before {
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: all 0.3s var(--transition-smooth);
+  transition: all 0.4s var(--transition-ios);
   position: relative;
   overflow: hidden;
+  will-change: transform;
 }
 
 .tab::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s var(--transition-smooth);
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s var(--transition-ios), height 0.6s var(--transition-ios);
+}
+
+.tab:hover::before {
+  width: 200%;
+  height: 200%;
 }
 
 .tab:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.2);
+}
+
+.tab:active {
+  transform: scale(0.97);
 }
 
 .tab.active {
   background: var(--primary);
   border-color: var(--primary);
   color: #ffffff;
-  box-shadow: 0 4px 16px var(--primary-glow), 0 0 0 1px var(--primary) inset;
+  box-shadow: 0 4px 16px var(--primary-glow), 
+              0 0 0 1px var(--primary) inset,
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(0);
+  animation: tabActivate 0.4s var(--transition-spring);
 }
 
-.tab.active::before {
-  opacity: 0.3;
+@keyframes tabActivate {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Container */
@@ -171,14 +206,35 @@ button {
   font-family: inherit;
   border: none;
   cursor: pointer;
-  transition: all 0.3s var(--transition-smooth);
+  transition: all 0.25s var(--transition-ios);
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.5s var(--transition-ios);
+}
+
+button:active::before {
+  opacity: 1;
+  transform: scale(2);
+  transition: all 0s;
 }
 
 button:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
+  transition: all 0.1s var(--transition-smooth);
 }
 
 .btn-primary, .primary {
@@ -186,14 +242,29 @@ button:active {
   color: #ffffff;
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 16px var(--primary-glow);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px var(--primary-glow), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border: none;
+  position: relative;
+}
+
+.btn-primary::after, .primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%);
+  pointer-events: none;
 }
 
 .btn-primary:hover, .primary:hover {
-  background: #0051D5;
-  box-shadow: 0 6px 24px var(--primary-glow);
-  transform: translateY(-2px);
+  background: #0066FF;
+  box-shadow: 0 8px 28px var(--primary-glow), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-primary:active, .primary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px var(--primary-glow), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
 .btn-secondary {
@@ -203,11 +274,29 @@ button:active {
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.btn-secondary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-secondary:active {
+  transform: translateY(0) scale(0.98);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
 
 .btn-danger {
@@ -244,7 +333,7 @@ button:active {
 /* Views */
 .view {
   display: none;
-  animation: fadeIn 0.4s var(--transition-smooth);
+  animation: viewSlideIn 0.5s var(--transition-ios) forwards;
   min-height: 60vh;
 }
 
@@ -254,12 +343,35 @@ button:active {
 
 .view > h2 {
   margin-bottom: 1.5rem;
+  animation: fadeInDown 0.6s var(--transition-ios) backwards;
+}
+
+@keyframes viewSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -289,9 +401,11 @@ button:active {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   box-shadow: var(--glass-shadow);
-  transition: all 0.3s var(--transition-smooth);
+  transition: all 0.4s var(--transition-ios);
   position: relative;
   overflow: hidden;
+  animation: cardFadeIn 0.5s var(--transition-ios) backwards;
+  will-change: transform;
 }
 
 .card::before {
@@ -303,17 +417,58 @@ button:active {
   height: 3px;
   background: linear-gradient(90deg, var(--primary), var(--accent));
   opacity: 0;
+  transition: opacity 0.4s var(--transition-smooth);
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+  opacity: 0;
   transition: opacity 0.3s var(--transition-smooth);
+  pointer-events: none;
 }
 
 .card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  transform: translateY(-6px) scale(1.01);
 }
 
 .card:hover::before {
   opacity: 1;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+.card:active {
+  transform: translateY(-2px) scale(0.99);
+  transition: all 0.15s var(--transition-smooth);
+}
+
+/* Stagger animation for grid items */
+.grid .card:nth-child(1) { animation-delay: 0.05s; }
+.grid .card:nth-child(2) { animation-delay: 0.1s; }
+.grid .card:nth-child(3) { animation-delay: 0.15s; }
+.grid .card:nth-child(4) { animation-delay: 0.2s; }
+.grid .card:nth-child(5) { animation-delay: 0.25s; }
+.grid .card:nth-child(6) { animation-delay: 0.3s; }
+.grid .card:nth-child(7) { animation-delay: 0.35s; }
+.grid .card:nth-child(8) { animation-delay: 0.4s; }
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .card .title {
@@ -362,6 +517,19 @@ button:active {
   font-size: 0.85rem;
   font-weight: 500;
   backdrop-filter: blur(10px);
+  transition: all 0.3s var(--transition-ios);
+  animation: badgeFadeIn 0.4s var(--transition-ios) backwards;
+}
+
+@keyframes badgeFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .badge-primary {
@@ -407,7 +575,15 @@ button:active {
   color: var(--text-primary);
   font-family: inherit;
   font-size: 1rem;
-  transition: all 0.3s var(--transition-smooth);
+  transition: all 0.4s var(--transition-ios);
+  position: relative;
+}
+
+.form-field input:hover,
+.form-field select:hover,
+.form-field textarea:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .form-field input:focus,
@@ -416,7 +592,9 @@ button:active {
   outline: none;
   border-color: var(--primary);
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 3px var(--primary-glow);
+  box-shadow: 0 0 0 4px var(--primary-glow),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 .form-field textarea {
@@ -470,15 +648,16 @@ button:active {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
   opacity: 0;
-  transition: opacity 0.3s var(--transition-smooth);
+  transition: opacity 0.4s var(--transition-ios), backdrop-filter 0.4s var(--transition-ios);
+  animation: modalOverlayFadeIn 0.4s var(--transition-ios) forwards;
 }
 
 .modal-overlay.active {
@@ -487,6 +666,29 @@ button:active {
 
 .modal-overlay.closing {
   opacity: 0;
+  animation: modalOverlayFadeOut 0.3s var(--transition-ios) forwards;
+}
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes modalOverlayFadeOut {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
 }
 
 .modal-content {
@@ -495,18 +697,27 @@ button:active {
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6),
+              0 0 0 1px rgba(255, 255, 255, 0.05) inset;
   max-width: 500px;
   width: 100%;
   max-height: 90vh;
   overflow: auto;
   position: relative;
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.3s var(--transition-bounce);
+  transform: scale(0.85) translateY(40px);
+  opacity: 0;
+  transition: transform 0.5s var(--transition-spring), opacity 0.4s var(--transition-ios);
 }
 
 .modal-overlay.active .modal-content {
   transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.modal-overlay.closing .modal-content {
+  transform: scale(0.9) translateY(20px);
+  opacity: 0;
+  transition: transform 0.3s var(--transition-ios), opacity 0.3s var(--transition-ios);
 }
 
 .modal-close {
@@ -569,7 +780,7 @@ button:active {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   z-index: 2000;
   opacity: 0;
-  transition: all 0.3s var(--transition-smooth);
+  transition: all 0.5s var(--transition-spring);
   min-width: 280px;
   text-align: center;
 }
@@ -577,6 +788,21 @@ button:active {
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+  animation: toastBounceIn 0.5s var(--transition-spring);
+}
+
+@keyframes toastBounceIn {
+  0% {
+    transform: translateX(-50%) translateY(100px) scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-50%) translateY(-8px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
 }
 
 .toast-success {
@@ -655,6 +881,7 @@ canvas {
   backdrop-filter: blur(var(--blur-amount));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
+  animation: dashboardWelcomeFadeIn 0.6s var(--transition-ios) backwards;
 }
 
 .dashboard-welcome h2 {
@@ -664,6 +891,19 @@ canvas {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: fadeInDown 0.7s var(--transition-ios) backwards;
+  animation-delay: 0.1s;
+}
+
+@keyframes dashboardWelcomeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .dashboard-stats {
@@ -680,12 +920,30 @@ canvas {
   border-radius: var(--radius-md);
   padding: 1.25rem;
   text-align: center;
-  transition: all 0.3s var(--transition-smooth);
+  transition: all 0.4s var(--transition-ios);
+  animation: statCardFadeIn 0.5s var(--transition-ios) backwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.2s; }
+.stat-card:nth-child(2) { animation-delay: 0.3s; }
+.stat-card:nth-child(3) { animation-delay: 0.4s; }
+.stat-card:nth-child(4) { animation-delay: 0.5s; }
+
+@keyframes statCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 122, 255, 0.2);
 }
 
 .stat-value {
@@ -710,15 +968,49 @@ canvas {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
+  animation: barChartFadeIn 0.6s var(--transition-ios) backwards;
+  animation-delay: 0.6s;
 }
 
 .bar-chart h3 {
   margin: 0 0 1.5rem 0;
   color: var(--text-primary);
+  animation: fadeInDown 0.7s var(--transition-ios) backwards;
+  animation-delay: 0.7s;
+}
+
+@keyframes barChartFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .bar-item {
   margin-bottom: 1.25rem;
+  animation: barItemSlideIn 0.5s var(--transition-ios) backwards;
+}
+
+.bar-item:nth-child(1) { animation-delay: 0.8s; }
+.bar-item:nth-child(2) { animation-delay: 0.85s; }
+.bar-item:nth-child(3) { animation-delay: 0.9s; }
+.bar-item:nth-child(4) { animation-delay: 0.95s; }
+.bar-item:nth-child(5) { animation-delay: 1s; }
+.bar-item:nth-child(6) { animation-delay: 1.05s; }
+
+@keyframes barItemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .bar-header {
@@ -753,14 +1045,28 @@ canvas {
   border-radius: 999px;
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .bar-fill {
   height: 100%;
   border-radius: 999px;
-  transition: width 0.8s var(--transition-smooth);
+  transition: width 1s var(--transition-ios);
   position: relative;
-  box-shadow: 0 0 12px currentColor;
+  box-shadow: 0 0 16px currentColor,
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: barFillGlow 2s ease-in-out infinite;
+}
+
+@keyframes barFillGlow {
+  0%, 100% {
+    box-shadow: 0 0 16px currentColor,
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 24px currentColor,
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
 }
 
 /* Goals */
@@ -771,12 +1077,25 @@ canvas {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   margin-bottom: 1rem;
-  transition: all 0.3s var(--transition-smooth);
+  transition: all 0.4s var(--transition-ios);
+  animation: goalCardFadeIn 0.5s var(--transition-ios) backwards;
+}
+
+@keyframes goalCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .goal-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 32px rgba(0, 122, 255, 0.2);
 }
 
 .goal-card.achieved {
@@ -818,8 +1137,21 @@ canvas {
   height: 100%;
   background: linear-gradient(90deg, var(--primary), var(--accent));
   border-radius: 999px;
-  transition: width 0.5s var(--transition-smooth);
-  box-shadow: 0 0 12px var(--primary-glow);
+  transition: width 0.8s var(--transition-ios);
+  box-shadow: 0 0 16px var(--primary-glow),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: progressGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+  0%, 100% {
+    box-shadow: 0 0 16px var(--primary-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 24px var(--primary-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
 }
 
 .progress-text {
