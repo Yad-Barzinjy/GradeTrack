@@ -27,7 +27,7 @@
         <button class="tab" data-view="uebersicht">Gesamtübersicht</button>
         <button class="tab" data-view="entwicklungen">Entwicklungen</button>
         <button class="tab" data-view="ziele">Ziele</button>
-        <button class="tab" data-view="export">Export</button>
+        <button class="tab" data-view="vergleich">Vergleich</button>
         <button class="tab" data-view="einstellungen">Einstellungen</button>
       </nav>
     </header>
@@ -60,27 +60,63 @@
         <div id="goals"></div>
       </section>
 
-      <section id="view-export" class="view" aria-labelledby="export-heading">
-        <h2 id="export-heading">Export & Import</h2>
-        <div class="export-controls">
-          <button data-action="json">📄 Als JSON exportieren</button>
-          <button data-action="csv">📊 Als CSV exportieren</button>
-          <button data-action="pdf">📋 Als PDF exportieren</button>
-          <button data-action="image">🖼️ Als Bild exportieren</button>
-          <button data-action="import">📥 Daten importieren</button>
-          <button data-action="backup">💾 Backup erstellen</button>
-          <button data-action="restore">🔄 Backup wiederherstellen</button>
-        </div>
-        <p class="hint">Alle Daten werden sicher in IndexedDB gespeichert und überleben Browser-Cache-Löschungen. PDF- und Bildexport werden aktiv aufbereitet (kein einfacher Screenshot).</p>
+      <section id="view-vergleich" class="view" aria-labelledby="vergleich-heading">
+        <h2 id="vergleich-heading">Profilvergleich</h2>
+        <div id="comparison-content"></div>
       </section>
 
       <section id="view-einstellungen" class="view" aria-labelledby="settings-heading">
         <h2 id="settings-heading">Einstellungen</h2>
-        <fieldset class="field">
-          <legend>Notensystem</legend>
-          <label><input type="radio" name="grading" value="classic" checked /> 1–6 (mit 1+, 2- …)</label>
-          <label><input type="radio" name="grading" value="points" /> 0–15 Punkte (Oberstufe)</label>
-        </fieldset>
+        
+        <!-- Profilverwaltung -->
+        <div class="settings-section">
+          <h3>Profil</h3>
+          <div class="profile-controls">
+            <div class="form-field">
+              <label for="profile-select">Aktuelles Profil</label>
+              <select id="profile-select"></select>
+            </div>
+            <div class="form-actions">
+              <button id="add-profile" class="btn-primary">➕ Neues Profil erstellen</button>
+              <button id="delete-profile" class="btn-danger">🗑️ Profil löschen</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Design -->
+        <div class="settings-section">
+          <h3>Design</h3>
+          <fieldset class="field">
+            <legend>Theme</legend>
+            <label><input type="radio" name="theme" value="dark" checked /> 🌙 Dark Mode</label>
+            <label><input type="radio" name="theme" value="light" /> ☀️ Light Mode</label>
+          </fieldset>
+        </div>
+
+        <!-- Notensystem -->
+        <div class="settings-section">
+          <h3>Notensystem</h3>
+          <fieldset class="field">
+            <legend>Notensystem für aktuelles Profil</legend>
+            <label><input type="radio" name="grading" value="classic" checked /> 1–6 (mit 1+, 2- …)</label>
+            <label><input type="radio" name="grading" value="points" /> 0–15 Punkte (Oberstufe)</label>
+          </fieldset>
+        </div>
+
+        <!-- Export & Import -->
+        <div class="settings-section">
+          <h3>Export & Import</h3>
+          <div class="export-controls">
+            <button data-action="json">📄 Als JSON exportieren</button>
+            <button data-action="csv">📊 Als CSV exportieren</button>
+            <button data-action="pdf">📋 Als PDF exportieren</button>
+            <button data-action="image">🖼️ Als Bild exportieren</button>
+            <button data-action="import">📥 Daten importieren</button>
+            <button data-action="backup">💾 Backup erstellen</button>
+            <button data-action="restore">🔄 Backup wiederherstellen</button>
+          </div>
+          <p class="hint">Alle Daten werden sicher in IndexedDB gespeichert und überleben Browser-Cache-Löschungen.</p>
+        </div>
       </section>
     </main>
 

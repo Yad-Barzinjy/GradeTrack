@@ -1,6 +1,10 @@
 /* iOS 26 Liquid Glass Design System */
 :root {
-  --bg-primary: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1428 100%);
+  /* Dark Mode (Default) */
+  --bg-base: #0a0e27;
+  --bg-secondary: #1a1f3a;
+  --bg-tertiary: #0f1428;
+  --bg-primary: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
@@ -22,6 +26,34 @@
   --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   --transition-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
   --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Light Mode */
+body.light-mode {
+  --bg-base: #f5f7fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8ecf1;
+  --bg-primary: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  --text-primary: #1d1d1f;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-muted: rgba(0, 0, 0, 0.5);
+  --primary: #007AFF;
+  --primary-glow: rgba(0, 122, 255, 0.3);
+  --accent: #34C759;
+  --accent-glow: rgba(52, 199, 89, 0.3);
+  --danger: #FF3B30;
+  --danger-glow: rgba(255, 59, 48, 0.3);
+  --warning: #FF9500;
+}
+
+body.light-mode::before {
+  background: 
+    radial-gradient(ellipse at 20% 30%, rgba(0, 122, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(52, 199, 89, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 59, 48, 0.03) 0%, transparent 50%);
 }
 
 /* Enhanced smooth scrolling */
@@ -1186,6 +1218,46 @@ canvas {
 .grade-meta {
   color: var(--text-muted);
   font-size: 0.85rem;
+}
+
+/* Settings Sections */
+.settings-section {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-amount));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  animation: settingsSectionFadeIn 0.5s var(--transition-ios) backwards;
+}
+
+.settings-section:nth-child(1) { animation-delay: 0.1s; }
+.settings-section:nth-child(2) { animation-delay: 0.2s; }
+.settings-section:nth-child(3) { animation-delay: 0.3s; }
+.settings-section:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes settingsSectionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profile-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 /* Scrollbar */

@@ -1,19 +1,28 @@
 // Hilfsfunktionen für die Anzeige von Noten im korrekten Format
+import { numberToPoints, numberToClassic, roundForZeugnis } from './grades.js'
 
 /**
  * Konvertiert einen numerischen Durchschnitt (1.0-6.0) zurück ins gewählte Notensystem
+ * @param {number} numericValue - Numerischer Wert (1.0-6.0)
+ * @param {string} gradingMode - 'points' oder 'classic'
+ * @param {boolean} isZeugnis - Wenn true, wird ohne +/- gerundet (nur bei classic)
  */
-export function formatGradeDisplay(numericValue, gradingMode) {
+export function formatGradeDisplay(numericValue, gradingMode, isZeugnis = false) {
   if (numericValue === null || numericValue === undefined) return '-'
   
   if (gradingMode === 'points') {
-    // Zurück ins Punktesystem (0-15)
-    // 1.0 = 15 Punkte, 6.0 = 0 Punkte
-    const points = Math.round((6 - numericValue) * 3)
-    return Math.max(0, Math.min(15, points)).toString()
+    // Zurück ins Punktesystem (0-15) mit exakter Konvertierung
+    const points = numberToPoints(numericValue)
+    return points !== null ? points.toString() : '-'
   } else {
-    // Klassisches System (1.0-6.0)
-    return numericValue.toFixed(2)
+    // Klassisches System
+    if (isZeugnis) {
+      // Zeugnisnote ohne +/- (nur 1-6)
+      return roundForZeugnis(numericValue)?.toString() ?? '-'
+    } else {
+      // Mit +/- für Einzelnoten und Durchschnitte
+      return numberToClassic(numericValue) ?? '-'
+    }
   }
 }
 
@@ -33,9 +42,12 @@ export function getGradeRange(gradingMode) {
 
 /**
  * Formatiert die Anzeige mit Label
+ * @param {number} numericValue - Numerischer Wert (1.0-6.0)
+ * @param {string} gradingMode - 'points' oder 'classic'
+ * @param {boolean} isZeugnis - Wenn true, wird ohne +/- gerundet (nur bei classic)
  */
-export function formatGradeWithLabel(numericValue, gradingMode) {
-  const value = formatGradeDisplay(numericValue, gradingMode)
+export function formatGradeWithLabel(numericValue, gradingMode, isZeugnis = false) {
+  const value = formatGradeDisplay(numericValue, gradingMode, isZeugnis)
   const label = gradingMode === 'points' ? ' Pkt.' : ''
   return value + label
 }
