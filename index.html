@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#007AFF" />
+    <title>Schulnoten-Manager</title>
+    <meta name="description" content="Erfasse, vergleiche und exportiere Schulnoten (1–6 oder 0–15 Punkte)." />
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="src/css/styles.css" />
+  </head>
+  <body role="application">
+    <header class="app-header">
+      <h1>Schulnoten‑Manager</h1>
+      <nav class="tabs" aria-label="Hauptnavigation">
+        <button class="tab active" data-view="faecher">Fächer</button>
+        <button class="tab" data-view="uebersicht">Gesamtübersicht</button>
+        <button class="tab" data-view="entwicklungen">Entwicklungen</button>
+        <button class="tab" data-view="ziele">Ziele</button>
+        <button class="tab" data-view="export">Export</button>
+        <button class="tab" data-view="einstellungen">Einstellungen</button>
+      </nav>
+    </header>
+
+    <main id="app" class="container" tabindex="-1">
+      <section id="view-faecher" class="view active" aria-labelledby="faecher-heading">
+        <div class="toolbar">
+          <h2 id="faecher-heading">Fächer</h2>
+          <button id="add-subject" class="primary">Fach hinzufügen</button>
+        </div>
+        <div id="subjects-list" class="grid"></div>
+      </section>
+
+      <section id="view-uebersicht" class="view" aria-labelledby="uebersicht-heading">
+        <h2 id="uebersicht-heading">Gesamtübersicht</h2>
+        <div id="overview"></div>
+      </section>
+
+      <section id="view-entwicklungen" class="view" aria-labelledby="entwicklungen-heading">
+        <h2 id="entwicklungen-heading">Entwicklungen</h2>
+        <canvas id="trends-canvas" width="800" height="300" role="img" aria-label="Notenentwicklungen"></canvas>
+      </section>
+
+      <section id="view-ziele" class="view" aria-labelledby="ziele-heading">
+        <h2 id="ziele-heading">Ziele</h2>
+        <div id="goals"></div>
+      </section>
+
+      <section id="view-export" class="view" aria-labelledby="export-heading">
+        <h2 id="export-heading">Export & Import</h2>
+        <div class="export-controls">
+          <button data-action="json">📄 Als JSON exportieren</button>
+          <button data-action="csv">📊 Als CSV exportieren</button>
+          <button data-action="pdf">📋 Als PDF exportieren</button>
+          <button data-action="image">🖼️ Als Bild exportieren</button>
+          <button data-action="import">📥 Daten importieren</button>
+          <button data-action="backup">💾 Backup erstellen</button>
+          <button data-action="restore">🔄 Backup wiederherstellen</button>
+        </div>
+        <p class="hint">Alle Daten werden sicher in IndexedDB gespeichert und überleben Browser-Cache-Löschungen. PDF- und Bildexport werden aktiv aufbereitet (kein einfacher Screenshot).</p>
+      </section>
+
+      <section id="view-einstellungen" class="view" aria-labelledby="settings-heading">
+        <h2 id="settings-heading">Einstellungen</h2>
+        <fieldset class="field">
+          <legend>Notensystem</legend>
+          <label><input type="radio" name="grading" value="classic" checked /> 1–6 (mit 1+, 2- …)</label>
+          <label><input type="radio" name="grading" value="points" /> 0–15 Punkte (Oberstufe)</label>
+        </fieldset>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <small>© 2025 Schulnoten‑Manager</small>
+    </footer>
+
+    <!-- jsPDF für aktiven PDF-Export -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" integrity="sha384-czH3Vq2m3pGTRS+E3Hc0hR2B6Jxw3sIs3IcP2+g4kxfqv9b2k4tTQhE7QjFZb8hO" crossorigin="anonymous"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker registered:', reg))
+            .catch(err => console.log('Service Worker registration failed:', err))
+        })
+      }
+    </script>
+    
+    <script type="module" src="src/js/app.js"></script>
+  </body>
+</html>
