@@ -1,5 +1,5 @@
 import { state, initState, addSubject } from './state.js'
-import { renderSubjects, renderOverview, renderTrends, renderGoals, switchView } from './ui.js'
+import { renderDashboard, renderSubjects, renderOverview, renderTrends, renderGoals, switchView } from './ui.js'
 import { exportJSON, exportCSV, exportPDF, exportImage, importData } from './export.js'
 import { showFormModal, showToast } from './modal.js'
 import { setLanguage as setI18nLanguage, t } from './i18n.js'
@@ -16,6 +16,7 @@ import { createBackup, listBackups, restoreBackup } from './storage.js'
     }
     
     // Initial render
+    renderDashboard(state)
     renderSubjects(state)
     renderOverview(state)
     renderTrends(state)

@@ -4,10 +4,167 @@ import { showFormModal, showConfirmDialog, showToast } from './modal.js'
 import { t } from './i18n.js'
 import { formatGradeDisplay, formatGradeWithLabel } from './display.js'
 
+export function renderDashboard(s) {
+  const container = document.getElementById('dashboard-content')
+  if (!container) return
+  
+  container.innerHTML = ''
+  
+  // Welcome Section
+  const welcome = document.createElement('div')
+  welcome.className = 'dashboard-welcome'
+  
+  const now = new Date()
+  const hour = now.getHours()
+  let greeting = 'Guten Morgen'
+  if (hour >= 12 && hour < 18) greeting = 'Guten Tag'
+  else if (hour >= 18) greeting = 'Guten Abend'
+  
+  welcome.innerHTML = `
+    <h2>${greeting}! 👋</h2>
+    <p style="color:var(--text-secondary);margin:0;">Hier ist deine Notenübersicht</p>
+  `
+  container.appendChild(welcome)
+  
+  if (s.subjects.length === 0) {
+    container.innerHTML += `
+      <div class="card">
+        <p class="hint">Noch keine Fächer vorhanden. Füge dein erstes Fach hinzu, um loszulegen! 📚</p>
+        <button class="btn-primary" onclick="document.querySelector('[data-view=\"faecher\"]').click(); document.getElementById('add-subject').click();">Fach hinzufügen</button>
+      </div>
+    `
+    return
+  }
+  
+  // Stats Cards
+  const averages = s.subjects
+    .map(sub => averageForSubject(sub, s.grading))
+    .filter(avg => avg !== null)
+  
+  const overallAvg = averages.length > 0
+    ? averages.reduce((sum, avg) => sum + avg, 0) / averages.length
+    : null
+  
+  const bestAvg = averages.length > 0 ? Math.min(...averages) : null
+  const worstAvg = averages.length > 0 ? Math.max(...averages) : null
+  
+  const totalGrades = s.subjects.reduce((sum, sub) => 
+    sum + sub.written.length + sub.oral.length, 0
+  )
+  
+  const stats = document.createElement('div')
+  stats.className = 'dashboard-stats'
+  stats.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-value">${s.subjects.length}</div>
+      <div class="stat-label">Fächer</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${totalGrades}</div>
+      <div class="stat-label">Noten</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${overallAvg ? formatGradeDisplay(overallAvg, s.grading) : '-'}</div>
+      <div class="stat-label">Durchschnitt</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${bestAvg ? formatGradeDisplay(bestAvg, s.grading) : '-'}</div>
+      <div class="stat-label">Beste Note</div>
+    </div>
+  `
+  container.appendChild(stats)
+  
+  // Bar Chart - Subjects sorted by grade
+  const subjectsWithGrades = s.subjects
+    .map(sub => ({
+      ...sub,
+      average: averageForSubject(sub, s.grading)
+    }))
+    .filter(sub => sub.average !== null)
+    .sort((a, b) => a.average - b.average) // Best first (lower is better)
+  
+  if (subjectsWithGrades.length > 0) {
+    const barChart = document.createElement('div')
+    barChart.className = 'bar-chart'
+    barChart.innerHTML = '<h3>📊 Fächer nach Durchschnitt</h3>'
+    
+    subjectsWithGrades.forEach(sub => {
+      const barItem = document.createElement('div')
+      barItem.className = 'bar-item'
+      
+      // Calculate bar width (inverse scale - better grades = longer bars)
+      // For classic: 1.0 = 100%, 6.0 = 0%
+      // For points: 15 = 100%, 0 = 0%
+      let barWidth
+      if (s.grading === 'points') {
+        // Convert back to points for calculation
+        const points = Math.round((6 - sub.average) * 3)
+        barWidth = (points / 15) * 100
+      } else {
+        barWidth = ((6 - sub.average) / 5) * 100
+      }
+      
+      // Grade color
+      let gradeColor
+      if (sub.average <= 2) {
+        gradeColor = 'var(--accent)'
+      } else if (sub.average <= 3) {
+        gradeColor = 'var(--primary)'
+      } else if (sub.average <= 4) {
+        gradeColor = 'var(--warning)'
+      } else {
+        gradeColor = 'var(--danger)'
+      }
+      
+      barItem.innerHTML = `
+        <div class="bar-header">
+          <div class="bar-subject">
+            <span class="dot" style="background:${sub.color};color:${sub.color}"></span>
+            <span>${sub.name}</span>
+          </div>
+          <div class="bar-grade" style="color:${gradeColor}">
+            ${formatGradeWithLabel(sub.average, s.grading)}
+          </div>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill" style="width:${barWidth}%;background:${gradeColor};color:${gradeColor}"></div>
+        </div>
+      `
+      
+      barChart.appendChild(barItem)
+    })
+    
+    container.appendChild(barChart)
+  }
+  
+  // Quick Actions
+  const actions = document.createElement('div')
+  actions.className = 'card'
+  actions.innerHTML = `
+    <h3 style="margin:0 0 1rem 0">⚡ Schnellzugriff</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem">
+      <button class="btn-primary" onclick="document.querySelector('[data-view=\"faecher\"]').click()">
+        📚 Fächer verwalten
+      </button>
+      <button class="btn-secondary" onclick="document.querySelector('[data-view=\"ziele\"]').click()">
+        🎯 Ziele setzen
+      </button>
+      <button class="btn-secondary" onclick="document.querySelector('[data-view=\"entwicklungen\"]').click()">
+        📈 Entwicklung
+      </button>
+      <button class="btn-secondary" onclick="document.querySelector('[data-view=\"export\"]').click()">
+        💾 Export
+      </button>
+    </div>
+  `
+  container.appendChild(actions)
+}
+
 export function switchView(view) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'))
   const el = document.getElementById(`view-${view}`)
   if (el) el.classList.add('active')
+  if (view === 'dashboard') renderDashboard(state)
   if (view === 'entwicklungen') renderTrends(state)
   if (view === 'ziele') renderGoals(state)
   if (view === 'uebersicht') renderOverview(state)

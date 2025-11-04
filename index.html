@@ -22,7 +22,8 @@
     <header class="app-header">
       <h1>Schulnoten‑Manager</h1>
       <nav class="tabs" aria-label="Hauptnavigation">
-        <button class="tab active" data-view="faecher">Fächer</button>
+        <button class="tab active" data-view="dashboard">Dashboard</button>
+        <button class="tab" data-view="faecher">Fächer</button>
         <button class="tab" data-view="uebersicht">Gesamtübersicht</button>
         <button class="tab" data-view="entwicklungen">Entwicklungen</button>
         <button class="tab" data-view="ziele">Ziele</button>
@@ -32,7 +33,11 @@
     </header>
 
     <main id="app" class="container" tabindex="-1">
-      <section id="view-faecher" class="view active" aria-labelledby="faecher-heading">
+      <section id="view-dashboard" class="view active" aria-labelledby="dashboard-heading">
+        <div id="dashboard-content"></div>
+      </section>
+
+      <section id="view-faecher" class="view" aria-labelledby="faecher-heading">
         <div class="toolbar">
           <h2 id="faecher-heading">Fächer</h2>
           <button id="add-subject" class="primary">Fach hinzufügen</button>
