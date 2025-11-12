@@ -158,6 +158,35 @@ body::before {
   position: relative;
   overflow: hidden;
   will-change: transform;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab .material-symbols-rounded {
+  font-size: 1.25rem;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  transition: font-variation-settings 0.3s var(--transition-ios);
+}
+
+.tab.active .material-symbols-rounded {
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+@media (max-width: 768px) {
+  .tab span:not(.material-symbols-rounded) {
+    display: none;
+  }
+  
+  .tab {
+    padding: 0.5rem;
+    min-width: 44px;
+    justify-content: center;
+  }
+  
+  .tab .material-symbols-rounded {
+    font-size: 1.5rem;
+  }
 }
 
 .tab::before {

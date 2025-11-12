@@ -16,18 +16,38 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     
     <link rel="manifest" href="/manifest.json" />
+    <!-- Material Icons (MIT License) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="src/css/styles.css" />
   </head>
   <body role="application">
     <header class="app-header">
       <h1>GradeTrack</h1>
       <nav class="tabs" aria-label="Hauptnavigation">
-        <button class="tab active" data-view="dashboard">Dashboard</button>
-        <button class="tab" data-view="faecher">Fächer</button>
-        <button class="tab" data-view="uebersicht">Gesamtübersicht</button>
-        <button class="tab" data-view="entwicklungen">Entwicklungen</button>
-        <button class="tab" data-view="ziele">Ziele</button>
-        <button class="tab" data-view="einstellungen">Einstellungen</button>
+        <button class="tab active" data-view="dashboard">
+          <span class="material-symbols-rounded">dashboard</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="tab" data-view="faecher">
+          <span class="material-symbols-rounded">school</span>
+          <span>Fächer</span>
+        </button>
+        <button class="tab" data-view="uebersicht">
+          <span class="material-symbols-rounded">summarize</span>
+          <span>Übersicht</span>
+        </button>
+        <button class="tab" data-view="entwicklungen">
+          <span class="material-symbols-rounded">trending_up</span>
+          <span>Entwicklung</span>
+        </button>
+        <button class="tab" data-view="ziele">
+          <span class="material-symbols-rounded">flag</span>
+          <span>Ziele</span>
+        </button>
+        <button class="tab" data-view="einstellungen">
+          <span class="material-symbols-rounded">settings</span>
+          <span>Einstellungen</span>
+        </button>
       </nav>
     </header>
 
@@ -120,6 +140,8 @@
 
     <footer class="app-footer">
       <small>© 2025 GradeTrack</small>
+      <span style="margin:0 0.5rem;color:var(--text-muted);">•</span>
+      <a href="/about.html" style="color:var(--primary);text-decoration:none;transition:opacity 0.3s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Über GradeTrack</a>
     </footer>
 
     <!-- jsPDF für aktiven PDF-Export -->
