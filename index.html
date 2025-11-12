@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#007AFF" />
-    <title>Schulnoten-Manager</title>
+    <title>GradeTrack</title>
     <meta name="description" content="Erfasse, vergleiche und exportiere Schulnoten (1–6 oder 0–15 Punkte)." />
     
     <!-- Favicons -->
@@ -20,14 +20,13 @@
   </head>
   <body role="application">
     <header class="app-header">
-      <h1>Schulnoten‑Manager</h1>
+      <h1>GradeTrack</h1>
       <nav class="tabs" aria-label="Hauptnavigation">
         <button class="tab active" data-view="dashboard">Dashboard</button>
         <button class="tab" data-view="faecher">Fächer</button>
         <button class="tab" data-view="uebersicht">Gesamtübersicht</button>
         <button class="tab" data-view="entwicklungen">Entwicklungen</button>
         <button class="tab" data-view="ziele">Ziele</button>
-        <button class="tab" data-view="vergleich">Vergleich</button>
         <button class="tab" data-view="einstellungen">Einstellungen</button>
       </nav>
     </header>
@@ -79,29 +78,9 @@
         <div id="goals"></div>
       </section>
 
-      <section id="view-vergleich" class="view" aria-labelledby="vergleich-heading">
-        <h2 id="vergleich-heading">Profilvergleich</h2>
-        <div id="comparison-content"></div>
-      </section>
-
       <section id="view-einstellungen" class="view" aria-labelledby="settings-heading">
         <h2 id="settings-heading">Einstellungen</h2>
         
-        <!-- Profilverwaltung -->
-        <div class="settings-section">
-          <h3>Profil</h3>
-          <div class="profile-controls">
-            <div class="form-field">
-              <label for="profile-select">Aktuelles Profil</label>
-              <select id="profile-select"></select>
-            </div>
-            <div class="form-actions">
-              <button id="add-profile" class="btn-primary">➕ Neues Profil erstellen</button>
-              <button id="delete-profile" class="btn-danger">🗑️ Profil löschen</button>
-            </div>
-          </div>
-        </div>
-
         <!-- Design -->
         <div class="settings-section">
           <h3>Design</h3>
@@ -116,7 +95,7 @@
         <div class="settings-section">
           <h3>Notensystem</h3>
           <fieldset class="field">
-            <legend>Notensystem für aktuelles Profil</legend>
+            <legend>Notensystem</legend>
             <label><input type="radio" name="grading" value="classic" checked /> 1–6 (mit 1+, 2- …)</label>
             <label><input type="radio" name="grading" value="points" /> 0–15 Punkte (Oberstufe)</label>
           </fieldset>
@@ -140,7 +119,7 @@
     </main>
 
     <footer class="app-footer">
-      <small>© 2025 Schulnoten‑Manager</small>
+      <small>© 2025 GradeTrack</small>
     </footer>
 
     <!-- jsPDF für aktiven PDF-Export -->
